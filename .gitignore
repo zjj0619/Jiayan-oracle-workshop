@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+cloudfunctions/*/node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# CloudBase
+.cloudbase/
+cloudbaserc.json
+
+# Temporary files
+*.tmp
+*.temp

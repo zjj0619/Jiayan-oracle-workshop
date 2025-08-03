@@ -1,0 +1,19 @@
+{
+  "name": "community-handler",
+  "version": "1.0.0",
+  "description": "甲言社区功能云函数",
+  "main": "index.js",
+  "dependencies": {
+    "@cloudbase/node-sdk": "^2.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cloudbase",
+    "community",
+    "jiayan"
+  ],
+  "author": "大梦归迟团队",
+  "license": "MIT"
+}

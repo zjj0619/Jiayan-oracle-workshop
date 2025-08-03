@@ -1,0 +1,16 @@
+{
+  "name": "ai-gateway-handler",
+  "version": "1.0.0",
+  "description": "AI Gateway to ModelScope",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DaMengGuiChi",
+  "license": "ISC",
+  "dependencies": {
+    "@cloudbase/node-sdk": "^2.10.0",
+    "axios": "^1.6.0",
+    "joi": "^17.13.3"
+  }
+}
