@@ -26,6 +26,9 @@ Thumbs.db
 .cloudbase/
 cloudbaserc.json
 
+# Git disabled directory
+.git_disabled/
+
 # Temporary files
 *.tmp
 *.temp
