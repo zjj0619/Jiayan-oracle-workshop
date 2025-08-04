@@ -14,7 +14,7 @@ export default defineConfig({
     allowedHosts: true
   },
   // GitHub Pages 部署配置
-  base: process.env.NODE_ENV === 'production' ? '/jiayan-oracle-workshop/' : '/',
+  base: '/jiayan-oracle-workshop/',
   build: {
     outDir: "dist",
     assetsDir: "assets",
