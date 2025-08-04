@@ -1,58 +1,383 @@
-@import url('https://fonts.googleapis.com/css2?family=Source+Han+Sans+CN:wght@400;700&family=Source+Han+Serif+CN:wght@700&display=swap');
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* 数字考古主题色彩系统 */
-  --ink-black: #1C1C1E;      /* 墨石黑 */
-  --bone-white: #F5F2E9;     /* 宣纸白 */
-  --cinnabar-red: #D93423;   /* 朱砂红 */
-  --elegant-gray: #A9A9A9;  /* 雅灰 */
-
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
-
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
- 
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 346.8 77.2% 49.8%;
-  
-  --radius: 0.5rem;
+  /* 古朴甲骨文主题色彩 - 更加沉稳典雅 */
+  --oracle-primary: #5D4037;     /* 深褐色 - 古木色 */
+  --oracle-secondary: #8D6E63;   /* 灰褐色 - 古铜锈色 */
+  --oracle-accent: #A1887F;      /* 浅褐色 - 古陶色 */
+  --oracle-gold: #B8860B;        /* 暗金色 - 古铜器色 */
+  --oracle-dark: #3E2723;        /* 深咖啡色 - 墨色 */
+  --oracle-light: #EFEBE9;       /* 古纸色 - 羊皮纸色 */
+  --oracle-bg: #F5F5DC;          /* 米色 - 古卷轴色 */
+  --oracle-text: #2E1A0F;        /* 深棕黑 - 古墨色 */
+  --oracle-border: #795548;      /* 赭石色 - 古印泥色 */
+  --oracle-shadow: rgba(93, 64, 55, 0.25); /* 古朴阴影 */
+  --oracle-muted: #BCAAA4;       /* 灰褐色 - 古石色 */
+  --oracle-surface: #FFF8E1;     /* 象牙白 - 古绢色 */
 }
 
-@layer base {
-  * {
-    @apply border-border;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', serif, -apple-system, BlinkMacSystemFont;
+  background: linear-gradient(135deg, var(--oracle-bg) 0%, var(--oracle-surface) 50%, var(--oracle-light) 100%);
+  color: var(--oracle-text);
+  line-height: 1.7;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* 古朴纹理背景 - 模拟古纸质感 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(93, 64, 55, 0.02) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(121, 85, 72, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 40% 80%, rgba(141, 110, 99, 0.02) 0%, transparent 40%);
+  background-size: 300px 300px, 400px 400px, 250px 250px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+/* 古纸纹理效果 */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(93, 64, 55, 0.01) 2px,
+      rgba(93, 64, 55, 0.01) 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(121, 85, 72, 0.01) 2px,
+      rgba(121, 85, 72, 0.01) 3px
+    );
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+/* 滚动条样式 - 古朴风格 */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--oracle-light);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--oracle-primary) 0%, var(--oracle-secondary) 100%);
+  border-radius: 5px;
+  border: 1px solid var(--oracle-border);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--oracle-dark) 0%, var(--oracle-primary) 100%);
+}
+
+/* 通用组件样式 - 古朴玻璃效果 */
+.glass-effect {
+  background: rgba(239, 235, 233, 0.85);
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(93, 64, 55, 0.15);
+  box-shadow: 
+    0 8px 32px var(--oracle-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.oracle-gradient {
+  background: linear-gradient(135deg, var(--oracle-primary) 0%, var(--oracle-secondary) 50%, var(--oracle-accent) 100%);
+}
+
+.oracle-text-gradient {
+  background: linear-gradient(135deg, var(--oracle-primary) 0%, var(--oracle-gold) 50%, var(--oracle-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+}
+
+/* 按钮样式 - 古朴风格 */
+.oracle-button {
+  background: linear-gradient(135deg, var(--oracle-primary) 0%, var(--oracle-secondary) 100%);
+  color: var(--oracle-light);
+  border: 2px solid var(--oracle-border);
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 16px var(--oracle-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.oracle-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.oracle-button:hover::before {
+  left: 100%;
+}
+
+.oracle-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 12px 32px var(--oracle-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, var(--oracle-dark) 0%, var(--oracle-primary) 100%);
+  border-color: var(--oracle-gold);
+}
+
+/* 卡片样式 - 古朴典雅 */
+.oracle-card {
+  background: linear-gradient(145deg, var(--oracle-surface) 0%, var(--oracle-light) 100%);
+  border: 2px solid rgba(93, 64, 55, 0.12);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 
+    0 8px 32px var(--oracle-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.oracle-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--oracle-gold), transparent);
+  opacity: 0.5;
+}
+
+.oracle-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 
+    0 20px 48px var(--oracle-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border-color: rgba(93, 64, 55, 0.25);
+}
+
+/* 输入框样式 - 古朴风格 */
+.oracle-input {
+  background: linear-gradient(145deg, var(--oracle-surface) 0%, rgba(255, 248, 225, 0.8) 100%);
+  border: 2px solid rgba(93, 64, 55, 0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  color: var(--oracle-text);
+  font-size: 16px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(93, 64, 55, 0.05);
+}
+
+.oracle-input:focus {
+  outline: none;
+  border-color: var(--oracle-primary);
+  box-shadow: 
+    0 0 0 4px rgba(93, 64, 55, 0.1),
+    inset 0 2px 4px rgba(93, 64, 55, 0.05);
+  background: var(--oracle-surface);
+}
+
+.oracle-input::placeholder {
+  color: var(--oracle-muted);
+  font-style: italic;
+}
+
+/* 导航样式 - 古朴导航 */
+.oracle-nav {
+  background: linear-gradient(180deg, rgba(239, 235, 233, 0.95) 0%, rgba(245, 245, 220, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  border-bottom: 2px solid rgba(93, 64, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(93, 64, 55, 0.1);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .oracle-card {
+    padding: 24px;
+    border-radius: 16px;
   }
+  
+  .oracle-button {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+  
   body {
-    @apply bg-ink-black text-elegant-gray;
-    font-family: 'Source Han Sans CN', sans-serif;
+    font-size: 14px;
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Source Han Serif CN', serif;
-    @apply text-bone-white;
+}
+
+/* 动画效果 - 古朴优雅 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scale-in {
+  animation: scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 古朴装饰元素 */
+.oracle-divider {
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, var(--oracle-primary) 20%, var(--oracle-gold) 50%, var(--oracle-primary) 80%, transparent 100%);
+  margin: 32px 0;
+  border-radius: 2px;
+  position: relative;
+}
+
+.oracle-divider::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: var(--oracle-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(184, 134, 11, 0.5);
+}
+
+.oracle-pattern {
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 3px,
+      rgba(93, 64, 55, 0.03) 3px,
+      rgba(93, 64, 55, 0.03) 6px
+    );
+}
+
+/* 古朴标题样式 */
+.oracle-title {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  color: var(--oracle-primary);
+  text-shadow: 0 2px 4px rgba(93, 64, 55, 0.1);
+  position: relative;
+}
+
+.oracle-subtitle {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 400;
+  color: var(--oracle-secondary);
+  font-style: italic;
+}
+
+/* 古朴边框装饰 */
+.oracle-border {
+  border: 2px solid var(--oracle-border);
+  border-image: linear-gradient(45deg, var(--oracle-primary), var(--oracle-gold), var(--oracle-secondary)) 1;
+  position: relative;
+}
+
+.oracle-border::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(45deg, var(--oracle-primary), var(--oracle-gold), var(--oracle-secondary));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.1;
+}
+
+/* 古朴阴影效果 */
+.oracle-shadow-soft {
+  box-shadow: 
+    0 4px 16px rgba(93, 64, 55, 0.15),
+    0 2px 8px rgba(93, 64, 55, 0.1);
+}
+
+.oracle-shadow-medium {
+  box-shadow: 
+    0 8px 32px rgba(93, 64, 55, 0.2),
+    0 4px 16px rgba(93, 64, 55, 0.15);
+}
+
+.oracle-shadow-strong {
+  box-shadow: 
+    0 16px 48px rgba(93, 64, 55, 0.25),
+    0 8px 24px rgba(93, 64, 55, 0.2);
 }

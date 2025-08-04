@@ -1,189 +1,363 @@
-'use client'
-
-import { ArrowRight, BookText, BrainCircuit, SearchCode, Archive, Users, Feather } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import React from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { 
+  BookOpen, 
+  Search, 
+  Users, 
+  Archive, 
+  Brain,
+  ArrowRight,
+  Sparkles,
+  Clock,
+  Award,
+  TrendingUp,
+  Play,
+  ChevronRight
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   const features = [
     {
-      icon: BookText,
-      title: '字源探寻',
-      description: '深入了解每个甲骨文字的起源、演变和含义，追溯三千年的文字历史。',
-      href: '/origin',
+      icon: <Search className="w-8 h-8" />,
+      title: "字源探寻",
+      description: "深入了解甲骨文的起源与演变历程",
+      link: "/origin",
+      color: "from-blue-500 to-cyan-500",
+      image: "/jiaguwen.jpg"
     },
     {
-      icon: BrainCircuit,
-      title: 'AI 问卜',
-      description: '与智能甲骨文专家对话，无论是学术问题还是趣味占卜，都能得到专业解答。',
-      href: '/qa',
+      icon: <Brain className="w-8 h-8" />,
+      title: "AI问卜",
+      description: "体验古代占卜文化，获得智慧启发",
+      link: "/ai-qa",
+      color: "from-purple-500 to-pink-500",
+      image: "/jinwen.webp"
     },
     {
-      icon: Archive,
-      title: '数字典藏',
-      description: '浏览高清甲骨文物拓片和3D模型，近距离感受中华文明的瑰宝。',
-      href: '/collection',
+      icon: <Users className="w-8 h-8" />,
+      title: "社区交流",
+      description: "与同好分享学习心得，共同探讨",
+      link: "/community",
+      color: "from-green-500 to-emerald-500",
+      image: "/xiaozhuan.jpg"
     },
+    {
+      icon: <Archive className="w-8 h-8" />,
+      title: "数字典藏",
+      description: "珍贵文物数字化展示与收藏",
+      link: "/collection",
+      color: "from-orange-500 to-red-500",
+      image: "/kaishu.jpg"
+    }
   ]
 
-  const collections = [
+  const stats = [
+    { number: "3000+", label: "甲骨文字符", icon: <BookOpen className="w-5 h-5" /> },
+    { number: "500+", label: "文物藏品", icon: <Archive className="w-5 h-5" /> },
+    { number: "10000+", label: "用户学习", icon: <Users className="w-5 h-5" /> },
+    { number: "99%", label: "满意度", icon: <Award className="w-5 h-5" /> }
+  ]
+
+  const timeline = [
     {
-      image: '/images/董作賓甲骨文軸.jpg',
-      title: '董作賓甲骨文軸',
-      description: '著名甲骨学家董作賓先生的甲骨文书法作品，展现了甲骨文字的艺术美感和学术价值，是现代甲骨文研究的重要成果。',
+      period: "商代晚期",
+      year: "约公元前1250-1046年",
+      title: "甲骨文诞生",
+      description: "商王室用于占卜的文字记录",
+      image: "/jiaguwen.jpg"
     },
     {
-      image: '/images/武丁卜辞甲骨片.jpg',
-      title: '武丁卜辞甲骨片',
-      description: '商王武丁时期的占卜刻辞，记录了商代王室的祭祀、征战等重要活动，是研究商代历史文化的珍贵实物资料。',
+      period: "西周时期",
+      year: "约公元前1046-771年", 
+      title: "金文发展",
+      description: "青铜器上的铭文艺术",
+      image: "/jinwen.webp"
     },
     {
-      image: '/images/史密森尼博物馆甲骨片.webp',
-      title: '史密森尼博物馆甲骨片',
-      description: '收藏于美国史密森尼博物馆的珍贵甲骨文物，展现了甲骨文的国际影响力和世界文化遗产价值。',
+      period: "秦朝统一",
+      year: "约公元前221年",
+      title: "小篆标准化",
+      description: "文字统一，书同文",
+      image: "/xiaozhuan.jpg"
     },
+    {
+      period: "汉代以后",
+      year: "约公元前206年起",
+      title: "楷书成熟",
+      description: "现代汉字的基础形态",
+      image: "/kaishu.jpg"
+    }
   ]
 
   return (
-    <div className="bg-ink-black text-elegant-gray font-sans">
+    <div className="min-h-screen bg-oracle-bg">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1561883814-890c1779339a?q=80&w=1974&auto=format&fit=crop')" }}></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-ink-black via-ink-black/80 to-transparent"></div>
-        
-        <div className="relative z-10 text-center px-4">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col items-center"
-          >
-            <div className="[writing-mode:vertical-rl] font-heading text-6xl md:text-8xl text-bone-white space-y-4 mb-12">
-              <span>一字千年</span>
-              <span>智慧永传</span>
-            </div>
-            
-            <p className="text-lg md:text-xl text-elegant-gray mb-8 max-w-2xl">
-              探索、解读、传承。甲言工坊致力于用现代科技激活古老文字的生命力。
-            </p>
-            
-            <div className="w-full max-w-lg">
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="输入您想了解的甲骨文或问题..."
-                  className="w-full h-14 pl-6 pr-36 rounded-md bg-white/5 border-white/20 text-bone-white placeholder:text-elegant-gray focus:ring-2 focus:ring-cinnabar-red"
-                />
-                <Button size="lg" className="absolute right-2 top-1/2 -translate-y-1/2 h-10 bg-cinnabar-red hover:bg-cinnabar-red/80 text-bone-white rounded">
-                  开始探索
-                </Button>
+      <section className="relative overflow-hidden bg-gradient-to-br from-oracle-primary via-oracle-secondary to-oracle-accent text-oracle-light">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container-modern relative z-10 py-20 lg:py-32">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-modern"
+            >
+              <Badge className="bg-oracle-gold/20 text-oracle-light border-oracle-gold/30 mb-6 px-4 py-2 rounded-full">
+                <Sparkles className="w-4 h-4" />
+                探索古代文明
+              </Badge>
+              
+              <h1 className="text-responsive-xl font-oracle font-bold leading-tight mb-6 text-oracle-light">
+                甲骨文工坊
+                <span className="block text-oracle-gold">传承千年智慧</span>
+              </h1>
+              
+              <p className="text-xl text-oracle-light/90 mb-8 leading-relaxed font-oracle">
+                深入探索中华文明的源头，体验甲骨文的神秘魅力。
+                从古代占卜到现代AI，让历史与科技完美融合。
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/origin">
+                  <Button size="lg" className="bg-oracle-light text-oracle-primary hover:bg-oracle-surface border-2 border-oracle-gold hover:border-oracle-gold/80 w-full sm:w-auto font-oracle font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                    <Play className="w-5 h-5 mr-2" />
+                    开始探索
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </Link>
+                <Link to="/ai-qa">
+                  <Button size="lg" variant="outline" className="border-oracle-gold/50 text-oracle-light hover:bg-oracle-gold/20 hover:border-oracle-gold w-full sm:w-auto font-oracle font-semibold px-8 py-3 rounded-xl">
+                    <Brain className="w-5 h-5 mr-2" />
+                    AI问卜体验
+                  </Button>
+                </Link>
               </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-24 bg-ink-black">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-heading text-bone-white mb-4">核心功能</h2>
-            <p className="text-lg text-elegant-gray max-w-3xl mx-auto">
-              我们提供一系列工具与资源，帮助您深入甲骨文的世界，体验从认知到创造的全过程。
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature, index) => {
-              const IconComponent = feature.icon
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Card className="bg-white/5 border border-white/10 rounded-lg h-full text-center p-8 transition-all duration-300 hover:border-cinnabar-red/50 hover:-translate-y-2">
-                    <div className="inline-block p-4 bg-cinnabar-red/10 rounded-full mb-6">
-                      <IconComponent className="w-8 h-8 text-cinnabar-red" />
-                    </div>
-                    <h3 className="text-2xl font-heading text-bone-white mb-4">
-                      {feature.title}
-                    </h3>
-                    <p className="text-elegant-gray leading-relaxed mb-6">
-                      {feature.description}
-                    </p>
-                    <Button variant="link" asChild className="text-cinnabar-red hover:text-cinnabar-red/80">
-                      <Link to={feature.href}>
-                        了解更多 <ArrowRight className="ml-2 w-4 h-4" />
-                      </Link>
-                    </Button>
-                  </Card>
-                </motion.div>
-              )
-            })}
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-strong">
+                <img 
+                  src="/jiaguwen.jpg" 
+                  alt="甲骨文" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div className="absolute bottom-6 left-6 text-white">
+                  <h3 className="text-xl font-bold mb-2">商代甲骨文</h3>
+                  <p className="text-white/80">中华文字的起源</p>
+                </div>
+              </div>
+              
+              {/* 浮动元素 */}
+              <motion.div
+                animate={{ y: [-10, 10, -10] }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="absolute -top-4 -right-4 w-20 h-20 bg-accent-gold rounded-full flex items-center justify-center shadow-medium"
+              >
+                <Sparkles className="w-8 h-8 text-white" />
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Collection Showcase Section */}
-      <section className="py-24 bg-white/5">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-heading text-bone-white mb-4">数字典藏精选</h2>
-            <p className="text-lg text-elegant-gray max-w-3xl mx-auto">
-              每一片甲骨，都是一段尘封的历史。我们精选了部分珍贵馆藏，邀您一同鉴赏。
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {collections.map((item, index) => (
+      {/* Stats Section */}
+      <section className="py-16 bg-oracle-surface">
+        <div className="container-modern">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
+                className="text-center"
               >
-                <Card className="bg-ink-black border border-white/10 rounded-lg overflow-hidden group">
-                  <div className="overflow-hidden">
-                    <img src={item.image} alt={item.title} className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110" />
-                  </div>
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-heading text-bone-white mb-2">{item.title}</h3>
-                    <p className="text-elegant-gray text-sm leading-relaxed">{item.description}</p>
-                  </CardContent>
-                </Card>
+                <div className="w-16 h-16 bg-gradient-to-br from-oracle-primary to-oracle-secondary rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg border-2 border-oracle-gold/30">
+                  <div className="text-oracle-light">{stat.icon}</div>
+                </div>
+                <div className="text-3xl font-bold text-oracle-primary mb-2 font-oracle">{stat.number}</div>
+                <div className="text-oracle-secondary font-oracle">{stat.label}</div>
               </motion.div>
             ))}
           </div>
-          <div className="text-center mt-12">
-            <Button size="lg" asChild className="bg-transparent border-2 border-cinnabar-red text-cinnabar-red hover:bg-cinnabar-red hover:text-bone-white rounded-md px-8">
-              <Link to="/collection">
-                探索完整典藏
-              </Link>
-            </Button>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-oracle-light">
+        <div className="container-modern">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <Badge className="bg-oracle-gold/20 text-oracle-primary border-oracle-gold/40 mb-4 px-4 py-2 rounded-full font-oracle">
+              <TrendingUp className="w-4 h-4" />
+              核心功能
+            </Badge>
+            <h2 className="text-responsive-lg font-bold text-oracle-primary mb-4 font-oracle">
+              探索甲骨文的多重魅力
+            </h2>
+            <p className="text-xl text-oracle-secondary max-w-2xl mx-auto font-oracle">
+              从历史溯源到AI互动，全方位体验中华文字的深厚底蕴
+            </p>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-2 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Link to={feature.link} className="block group">
+                  <Card className="bg-oracle-surface border-2 border-oracle-border/20 rounded-2xl h-full overflow-hidden group-hover:shadow-2xl group-hover:border-oracle-gold/40 transition-all duration-300 hover:transform hover:-translate-y-2">
+                    <div className="relative h-48 overflow-hidden">
+                      <img 
+                        src={feature.image} 
+                        alt={feature.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-oracle-primary/70 to-oracle-secondary/70"></div>
+                      <div className="absolute top-4 left-4 w-12 h-12 bg-oracle-gold/30 backdrop-blur-sm rounded-full flex items-center justify-center text-oracle-light border border-oracle-gold/50">
+                        {feature.icon}
+                      </div>
+                    </div>
+                    
+                    <CardContent className="p-6 bg-oracle-surface">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-xl font-bold text-oracle-primary font-oracle">{feature.title}</h3>
+                        <ChevronRight className="w-5 h-5 text-oracle-muted group-hover:text-oracle-gold group-hover:translate-x-1 transition-all duration-300" />
+                      </div>
+                      <p className="text-oracle-secondary leading-relaxed font-oracle">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Timeline Section */}
+      <section className="py-20 bg-oracle-light">
+        <div className="container-modern">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <Badge className="bg-oracle-gold/20 text-oracle-primary border-oracle-gold/40 mb-4 px-4 py-2 rounded-full font-oracle">
+              <Clock className="w-4 h-4" />
+              历史时间线
+            </Badge>
+            <h2 className="text-responsive-lg font-bold text-oracle-primary mb-4 font-oracle">
+              汉字演变历程
+            </h2>
+            <p className="text-xl text-oracle-secondary max-w-2xl mx-auto font-oracle">
+              从甲骨文到现代汉字，见证中华文字的千年传承
+            </p>
+          </motion.div>
+
+          <div className="relative">
+            {/* 时间线 */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-oracle-primary via-oracle-secondary to-oracle-accent rounded-full hidden lg:block"></div>
+            
+            <div className="space-y-12">
+              {timeline.map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                  className={`flex items-center gap-8 ${
+                    index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'
+                  }`}
+                >
+                  <div className="flex-1">
+                    <Card className="bg-oracle-surface border-2 border-oracle-border/20 rounded-2xl shadow-lg hover:shadow-xl hover:border-oracle-gold/40 transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 border-oracle-gold/30">
+                            <img 
+                              src={item.image} 
+                              alt={item.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <Badge className="bg-oracle-primary text-oracle-light border-oracle-gold/50 mb-2 font-oracle">{item.period}</Badge>
+                            <h3 className="text-xl font-bold text-oracle-primary mb-2 font-oracle">{item.title}</h3>
+                            <p className="text-oracle-muted text-sm mb-2 font-oracle">{item.year}</p>
+                            <p className="text-oracle-secondary font-oracle">{item.description}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  
+                  {/* 时间线节点 */}
+                  <div className="hidden lg:block w-4 h-4 bg-oracle-gold rounded-full border-4 border-oracle-light shadow-lg flex-shrink-0"></div>
+                  
+                  <div className="flex-1 hidden lg:block"></div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-ink-black">
-        <div className="container mx-auto px-4 text-center max-w-3xl">
-          <Feather className="w-12 h-12 text-cinnabar-red mx-auto mb-6" />
-          <h2 className="text-4xl md:text-5xl font-heading text-bone-white mb-6">
-            成为甲骨文的数字传承者
-          </h2>
-          <p className="text-lg text-elegant-gray mb-8">
-            无论您是学者、学生还是爱好者，都可以加入我们，共同为这份古老的智慧注入新的活力。您的每一次探索，都是一次宝贵的传承。
-          </p>
-          <Button size="lg" className="bg-cinnabar-red hover:bg-cinnabar-red/80 text-bone-white rounded-md px-10 py-6 text-lg">
-            立即加入
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
+      <section className="py-20 bg-gradient-to-br from-oracle-primary via-oracle-secondary to-oracle-accent text-oracle-light">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container-modern text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto"
+          >
+            <h2 className="text-responsive-lg font-bold mb-6 font-oracle text-oracle-light">
+              开启你的甲骨文探索之旅
+            </h2>
+            <p className="text-xl text-oracle-light/90 mb-8 leading-relaxed font-oracle">
+              加入我们，一起探索中华文明的源头，体验古代智慧与现代科技的完美结合
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/origin">
+                <Button size="lg" className="bg-oracle-light text-oracle-primary hover:bg-oracle-surface border-2 border-oracle-gold hover:border-oracle-gold/80 font-oracle font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  立即开始学习
+                </Button>
+              </Link>
+              <Link to="/community">
+                <Button size="lg" variant="outline" className="border-oracle-gold/50 text-oracle-light hover:bg-oracle-gold/20 hover:border-oracle-gold font-oracle font-semibold px-8 py-3 rounded-xl">
+                  <Users className="w-5 h-5 mr-2" />
+                  加入社区
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

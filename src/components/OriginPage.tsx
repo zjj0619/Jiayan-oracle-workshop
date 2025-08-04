@@ -1,397 +1,567 @@
-'use client'
-
-import { useState, useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { Calendar, MapPin, Eye, TreePine, ArrowRight } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  BookOpen, 
+  Clock, 
+  Search,
+  Play,
+  Eye,
+  Heart,
+  ChevronRight,
+  Calendar,
+  Layers,
+  Award,
+  Scroll
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import ArtifactViewer2D from './ArtifactViewer2D'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
 
-const OriginPage = () => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
+interface CharacterEvolution {
+  id: string
+  character: string
+  meaning: string
+  oracle: string
+  bronze: string
+  seal: string
+  regular: string
+  description: string
+  story: string
+  category: string
+  views: number
+  likes: number
+  isLiked: boolean
+}
+
+const OriginPage: React.FC = () => {
+  const [selectedCharacter, setSelectedCharacter] = useState<CharacterEvolution | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [currentStep, setCurrentStep] = useState(0)
+
+  // 汉字演变数据
+  const characters: CharacterEvolution[] = [
+    {
+      id: '1',
+      character: '日',
+      meaning: '太阳',
+      oracle: '☉',
+      bronze: '◯',
+      seal: '日',
+      regular: '日',
+      description: '象形字，像太阳的形状，中间有一点表示太阳黑子',
+      story: '古人观察太阳，发现太阳中间有黑点，于是在圆形中加一点来表示太阳',
+      category: '自然',
+      views: 2341,
+      likes: 156,
+      isLiked: false
+    },
+    {
+      id: '2',
+      character: '月',
+      meaning: '月亮',
+      oracle: '☽',
+      bronze: '⟨',
+      seal: '月',
+      regular: '月',
+      description: '象形字，像弯月的形状',
+      story: '古人观察月相变化，用弯曲的线条来表示月亮的形状',
+      category: '自然',
+      views: 1987,
+      likes: 134,
+      isLiked: true
+    },
+    {
+      id: '3',
+      character: '水',
+      meaning: '水',
+      oracle: '川',
+      bronze: '氵',
+      seal: '水',
+      regular: '水',
+      description: '象形字，像水流的样子',
+      story: '古人用弯曲的线条表示水的流动，后来演变为现在的水字',
+      category: '自然',
+      views: 1756,
+      likes: 98,
+      isLiked: false
+    },
+    {
+      id: '4',
+      character: '人',
+      meaning: '人',
+      oracle: '𠂉',
+      bronze: '人',
+      seal: '人',
+      regular: '人',
+      description: '象形字，像人的侧面形状',
+      story: '古人用简单的线条勾勒出人的轮廓，强调人直立行走的特征',
+      category: '人物',
+      views: 3421,
+      likes: 234,
+      isLiked: true
+    },
+    {
+      id: '5',
+      character: '山',
+      meaning: '山',
+      oracle: '⛰',
+      bronze: '山',
+      seal: '山',
+      regular: '山',
+      description: '象形字，像山峰的形状',
+      story: '古人用三个尖峰来表示连绵的山脉，体现了山的高耸特征',
+      category: '自然',
+      views: 1654,
+      likes: 87,
+      isLiked: false
+    },
+    {
+      id: '6',
+      character: '火',
+      meaning: '火',
+      oracle: '🔥',
+      bronze: '火',
+      seal: '火',
+      regular: '火',
+      description: '象形字，像火焰燃烧的样子',
+      story: '古人观察火焰跳跃的形态，用弯曲的线条表示火的动态美',
+      category: '自然',
+      views: 2156,
+      likes: 145,
+      isLiked: false
+    }
+  ]
+
+  const periods = [
+    {
+      id: '1',
+      name: '甲骨文时期',
+      period: '商代晚期（约公元前1250-1046年）',
+      description: '中国最早的成熟文字系统，主要用于占卜记录',
+      image: '/jiaguwen.jpg',
+      color: 'from-amber-600 to-orange-700'
+    },
+    {
+      id: '2',
+      name: '金文时期',
+      period: '西周至春秋（约公元前1046-476年）',
+      description: '铸刻在青铜器上的文字，用于记录重要事件',
+      image: '/jinwen.webp',
+      color: 'from-blue-600 to-indigo-700'
+    },
+    {
+      id: '3',
+      name: '小篆时期',
+      period: '秦朝（约公元前221-206年）',
+      description: '秦始皇统一文字后的标准字体',
+      image: '/xiaozhuan.jpg',
+      color: 'from-purple-600 to-pink-700'
+    },
+    {
+      id: '4',
+      name: '楷书时期',
+      period: '汉代至今（约公元前206年起）',
+      description: '现代汉字的基础形态，规范化程度最高',
+      image: '/kaishu.jpg',
+      color: 'from-green-600 to-emerald-700'
+    }
+  ]
+
+  const categories = [
+    { value: 'all', label: '全部' },
+    { value: '自然', label: '自然' },
+    { value: '人物', label: '人物' },
+    { value: '动物', label: '动物' },
+    { value: '器物', label: '器物' }
+  ]
+
+  const filteredCharacters = characters.filter(char => {
+    const matchesSearch = char.character.includes(searchQuery) || 
+                         char.meaning.includes(searchQuery) ||
+                         char.description.includes(searchQuery)
+    const matchesCategory = selectedCategory === 'all' || char.category === selectedCategory
+    return matchesSearch && matchesCategory
   })
 
-  const timelineData = [
-    {
-      year: "约公元前14世纪",
-      dynasty: "商代盘庚时期",
-      event: "甲骨文的初步发展",
-      description: "盘庚迁殷后，社会趋于稳定，占卜活动频繁，甲骨文作为记录占卜内容的文字随之发展，字形尚不完全固定。",
-      color: "bg-oracle-brown"
-    },
-    {
-      year: "约公元前13世纪",
-      dynasty: "商代武丁时期",
-      event: "甲骨文的黄金时代",
-      description: "武丁王在位期间，国力强盛，卜事繁多，甲骨文的使用达到顶峰。此时期的甲骨数量最多，内容最丰富，书风雄伟，是甲骨文研究的核心。",
-      color: "bg-bronze-blue"
-    },
-    {
-      year: "约公元前11世纪",
-      dynasty: "商末周初",
-      event: "风格演变与传承",
-      description: "商朝末年，甲骨文字形趋于简化、秀丽。周朝建立后，虽然金文成为主流，但在部分地区仍有少量甲骨卜辞发现，体现了文字的过渡与演变。",
-      color: "bg-cinnabar-red"
-    },
-    {
-      year: "1899年",
-      dynasty: "清末",
-      event: "甲骨文的惊世发现",
-      description: "金石学家王懿荣在北京首次鉴定出甲骨文，将其从“龙骨”的药材身份中剥离，开启了甲骨文的现代学术研究，震惊中外。",
-      color: "bg-oracle-brown"
-    },
-    {
-      year: "20世纪初",
-      dynasty: "现代研究",
-      event: "甲骨四堂与学术奠基",
-      description: "罗振玉、王国维、董作宾、郭沫若等“甲骨四堂”通过考释、缀合、分期等研究，为甲骨学建立起坚实的学术基础，使其成为一门国际性学科。",
-      color: "bg-bronze-blue"
-    }
-  ]
-
-  const archaeologicalSites = [
-    {
-      name: "殷墟宫殿宗庙遗址",
-      location: "河南安阳",
-      discovered: "1928年起",
-      significance: "被誉为\"中国现代考古学的摇篮\"，是商代晚期都城的核心，出土了王陵、宫殿及大量甲骨文，实证了商代历史。",
-      artifacts: "约15万片甲骨",
-      imageUrl: "/images/武丁卜辞甲骨片.jpg",
-      coordinates: { x: 35, y: 45 }
-    },
-    {
-      name: "小屯村宫殿宗庙区",
-      location: "河南安阳",
-      discovered: "1936年",
-      significance: "殷墟的核心区域，发现了商王武丁及其配偶妇好的宗庙，出土的甲骨文为了解商代王室生活提供了直接证据。",
-      artifacts: "超过2万片甲骨",
-      imageUrl: "/images/祖庚祭祀卜辞.jpg",
-      coordinates: { x: 40, y: 50 }
-    },
-    {
-      name: "花园庄东地甲骨窖藏",
-      location: "河南安阳",
-      discovered: "1991年",
-      significance: "一次性出土了完整的\"非王卜辞\"窖藏，内容多为一位名为\"子\"的贵族的占卜记录，极大地丰富了对商代社会结构的认识。",
-      artifacts: "1583片甲骨",
-      imageUrl: "/images/花园庄东地甲骨.jpg",
-      coordinates: { x: 45, y: 55 }
-    }
-  ]
-
-  const evolutionStages = [
-    {
-      stage: "甲骨文",
-      period: "商朝 (约前1600-前1046)",
-      description: "象形文字，直接描绘太阳形状，线条刚劲，充满原始的图画感。",
-      imageUrl: "https://images.unsplash.com/photo-1589475237197-3801f719af80?q=80&w=800&auto=format&fit=crop",
-      features: ["刀刻笔画，线条刚硬", "字形大小不一，图画性强", "多用于占卜记事"]
-    },
-    {
-      stage: "金文",
-      period: "西周 (约前1046-前771)",
-      description: "铸造在青铜器上，字形趋于圆润、规整，线条更加流畅，被称为“钟鼎文”。",
-      imageUrl: "https://images.unsplash.com/photo-1621955964364-c811243b4182?q=80&w=800&auto=format&fit=crop",
-      features: ["铸造成型，笔画丰满", "结构渐趋固定", "多为记功颂德的铭文"]
-    },
-    {
-      stage: "小篆",
-      period: "秦朝 (前221-前206)",
-      description: "秦始皇统一文字，字形高度对称、规范，奠定了汉字方块形态的基础。",
-      imageUrl: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?q=80&w=800&auto=format&fit=crop",
-      features: ["“书同文”的产物", "笔画粗细均匀，线条圆转", "结构严谨，对称美观"]
-    },
-    {
-      stage: "楷书",
-      period: "汉末至今",
-      description: "现代汉字的基础形态，笔画清晰，结构稳定，易于书写和辨认，又称“真书”。",
-      imageUrl: "https://images.unsplash.com/photo-1543365363-991e54946e11?q=80&w=800&auto=format&fit=crop",
-      features: ["“横平竖直”，笔画分明", "字形方正，结构稳定", "通行至今，应用最广"]
-    }
-  ]
-
-  const artifacts2D = [
-    {
-      id: 1,
-      name: "商王武丁卜骨",
-      description: "记录商王武丁时期关于战争的占卜。",
-      imageUrl: "/images/武丁卜辞甲骨片.jpg",
-      altText: "商王武丁卜骨"
-    },
-    {
-      id: 2,
-      name: "祭祀卜辞龟甲",
-      description: "详细记载了对先祖的祭祀仪式。",
-      imageUrl: "/images/祖庚祭祀卜辞.jpg",
-      altText: "祭祀卜辞龟甲"
-    },
-    {
-      id: 3,
-      name: "“王”字卜骨",
-      description: "刻有清晰“王”字的牛胛骨。",
-      imageUrl: "/images/花园庄东地甲骨.jpg",
-      altText: "“王”字卜骨"
-    }
-  ]
+  const startAnimation = () => {
+    if (!selectedCharacter) return
+    setIsAnimating(true)
+    setCurrentStep(0)
+    
+    const interval = setInterval(() => {
+      setCurrentStep(prev => {
+        if (prev >= 3) {
+          clearInterval(interval)
+          setIsAnimating(false)
+          return 0
+        }
+        return prev + 1
+      })
+    }, 1500)
+  }
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-bone-white">
+    <div className="min-h-screen bg-oracle-bg">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden oracle-pattern">
-        <div className="absolute inset-0 bg-gradient-to-b from-oracle-brown/20 to-bronze-blue/20" />
-        
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="relative z-10 text-center px-4 max-w-4xl mx-auto"
-        >
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 text-oracle-brown">
-            甲骨起源
-          </h1>
-          <p className="text-xl md:text-2xl text-ink-black/80 mb-8">
-            穿越三千年时光，探寻中华文字之源
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button className="bg-oracle-brown hover:bg-cinnabar-red text-bone-white">
-              <Calendar className="mr-2 w-5 h-5" />
-              时空长河
-            </Button>
-            <Button variant="outline" className="border-bronze-blue text-bronze-blue hover:bg-bronze-blue hover:text-bone-white">
-              <MapPin className="mr-2 w-5 h-5" />
-              考古地图
-            </Button>
-            <Button variant="outline" className="border-cinnabar-red text-cinnabar-red hover:bg-cinnabar-red hover:text-bone-white">
-              <TreePine className="mr-2 w-5 h-5" />
-              文字演化
-            </Button>
-          </div>
-        </motion.div>
+      <section className="relative overflow-hidden bg-gradient-to-br from-oracle-primary via-oracle-secondary to-oracle-accent text-oracle-light">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container-modern relative z-10 py-20 lg:py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <Badge className="bg-oracle-gold/20 text-oracle-light border-oracle-gold/30 mb-6 px-4 py-2 rounded-full font-oracle">
+              <Scroll className="w-4 h-4" />
+              字源探寻
+            </Badge>
+            
+            <h1 className="text-responsive-xl font-bold leading-tight mb-6 font-oracle text-oracle-light">
+              探索汉字的千年演变
+              <span className="block text-oracle-gold">从甲骨到楷书的文明传承</span>
+            </h1>
+            
+            <p className="text-xl text-oracle-light/90 mb-8 leading-relaxed max-w-2xl mx-auto font-oracle">
+              跟随时间的脚步，见证汉字从古老的甲骨文到现代楷书的华丽蜕变，
+              感受中华文明的深厚底蕴和文字艺术的无穷魅力。
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-oracle-light text-oracle-primary hover:bg-oracle-surface border-2 border-oracle-gold hover:border-oracle-gold/80 font-oracle font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                <Play className="w-5 h-5 mr-2" />
+                开始探索
+              </Button>
+              <Button size="lg" variant="outline" className="border-oracle-gold/50 text-oracle-light hover:bg-oracle-gold/20 hover:border-oracle-gold font-oracle font-semibold px-8 py-3 rounded-xl">
+                <BookOpen className="w-5 h-5 mr-2" />
+                学习指南
+              </Button>
+            </div>
+          </motion.div>
+        </div>
       </section>
 
-      {/* Timeline Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
+      {/* 历史时期展示 */}
+      <section className="py-20 bg-oracle-light">
+        <div className="container-modern">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-oracle-brown mb-4">时空长河</h2>
-            <p className="text-lg text-ink-black/70">追溯甲骨文从诞生到重现的历史轨迹</p>
+            <Badge className="bg-oracle-gold/20 text-oracle-primary border-oracle-gold/40 mb-4 px-4 py-2 rounded-full font-oracle">
+              <Clock className="w-4 h-4" />
+              历史时期
+            </Badge>
+            <h2 className="text-responsive-lg font-bold text-oracle-primary mb-4 font-oracle">
+              汉字发展的四个重要阶段
+            </h2>
+            <p className="text-xl text-oracle-secondary max-w-2xl mx-auto font-oracle">
+              从商代甲骨文到现代楷书，每个时期都有其独特的特征和历史价值
+            </p>
           </motion.div>
 
-          <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-oracle-brown via-bronze-blue to-cinnabar-red" />
-            
-            {timelineData.map((item, index) => (
+          <div className="grid lg:grid-cols-2 gap-8">
+            {periods.map((period, index) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                className={`relative flex items-center mb-16 ${
-                  index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'
-                }`}
+                key={period.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
               >
-                <div className="w-1/2 px-8">
-                  <Card className="glass-effect oracle-shadow hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-oracle-brown">{item.year}</CardTitle>
-                        <span className="text-sm text-bronze-blue font-medium">{item.dynasty}</span>
+                <Card className="bg-oracle-surface border-2 border-oracle-border/20 rounded-2xl shadow-lg hover:shadow-xl hover:border-oracle-gold/40 transition-all duration-300 hover:transform hover:-translate-y-2 h-full">
+                  <div className="relative h-48 overflow-hidden rounded-t-2xl">
+                    <img 
+                      src={period.image} 
+                      alt={period.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-oracle-primary/70 to-oracle-secondary/70"></div>
+                    <div className="absolute top-4 left-4">
+                      <Badge className="bg-oracle-gold/30 text-oracle-light border-oracle-gold/50 font-oracle">
+                        <Calendar className="w-3 h-3" />
+                        第{index + 1}阶段
+                      </Badge>
+                    </div>
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="text-xl font-bold text-oracle-light mb-1 font-oracle">{period.name}</h3>
+                      <p className="text-oracle-light/80 text-sm font-oracle">{period.period}</p>
+                    </div>
+                  </div>
+                  
+                  <CardContent className="p-6 bg-oracle-surface">
+                    <p className="text-oracle-secondary mb-4 leading-relaxed font-oracle">{period.description}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm text-oracle-secondary font-oracle">
+                        了解更多详情
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <h3 className="text-lg font-semibold text-ink-black mb-2">{item.event}</h3>
-                      <p className="text-ink-black/70">{item.description}</p>
-                    </CardContent>
-                  </Card>
+                      <ChevronRight className="w-5 h-5 text-oracle-muted hover:text-oracle-gold transition-colors duration-300" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 汉字演变展示 */}
+      <section className="py-20 bg-oracle-surface">
+        <div className="container-modern">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <Badge className="bg-oracle-gold/20 text-oracle-primary border-oracle-gold/40 mb-4 px-4 py-2 rounded-full font-oracle">
+              <Layers className="w-4 h-4" />
+              汉字演变
+            </Badge>
+            <h2 className="text-responsive-lg font-bold text-oracle-primary mb-4 font-oracle">
+              见证汉字的华丽蜕变
+            </h2>
+            <p className="text-xl text-oracle-secondary max-w-2xl mx-auto font-oracle">
+              选择一个汉字，观看它从甲骨文到现代楷书的完整演变过程
+            </p>
+          </motion.div>
+
+          {/* 搜索和筛选 */}
+          <Card className="bg-oracle-light border-2 border-oracle-border/20 rounded-2xl shadow-lg mb-8">
+            <CardContent className="p-6">
+              <div className="flex flex-col lg:flex-row gap-4 items-center">
+                <div className="relative flex-1">
+                  <Input
+                    type="text"
+                    placeholder="搜索汉字、含义或描述..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="bg-oracle-surface border-oracle-border/30 text-oracle-primary placeholder:text-oracle-muted focus:border-oracle-gold focus:ring-oracle-gold/20 rounded-xl pl-12 font-oracle"
+                  />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-oracle-muted" />
                 </div>
                 
-                {/* Timeline Node */}
-                <div className={`absolute left-1/2 transform -translate-x-1/2 w-6 h-6 rounded-full ${item.color} border-4 border-bone-white oracle-shadow`} />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+                <div className="flex gap-2 flex-wrap">
+                  {categories.map((category) => (
+                    <Button
+                      key={category.value}
+                      variant={selectedCategory === category.value ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory(category.value)}
+                      className={selectedCategory === category.value 
+                        ? 'bg-oracle-primary text-oracle-light hover:bg-oracle-secondary border-oracle-gold font-oracle' 
+                        : 'border-oracle-border text-oracle-secondary hover:bg-oracle-gold/10 hover:border-oracle-gold font-oracle'
+                      }
+                    >
+                      {category.label}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-      {/* Archaeological Map Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-bone-white to-oracle-brown/5">
-        <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-oracle-brown mb-4">考古地图</h2>
-            <p className="text-lg text-ink-black/70">重要考古发现地点分布</p>
-          </motion.div>
-
-          <div className="relative">
-            {/* Simplified Map Background */}
-            <div className="relative w-full h-96 bg-gradient-to-br from-bronze-blue/10 to-oracle-brown/10 rounded-2xl overflow-hidden oracle-shadow">
-              <div className="absolute inset-0 oracle-pattern opacity-30" />
-              
-              {archaeologicalSites.map((site, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.6, delay: index * 0.2 }}
-                  className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
-                  style={{ 
-                    left: `${site.coordinates.x}%`, 
-                    top: `${site.coordinates.y}%` 
-                  }}
-                >
-                  <div className="w-4 h-4 bg-cinnabar-red rounded-full oracle-shadow group-hover:scale-125 transition-transform" />
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Card className="glass-effect p-3 min-w-48">
-                      <h4 className="font-semibold text-oracle-brown">{site.name}</h4>
-                      <p className="text-sm text-ink-black/70">{site.location}</p>
-                      <p className="text-sm text-bronze-blue">{site.artifacts}</p>
-                    </Card>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Site Details */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-              {archaeologicalSites.map((site, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: index * 0.1 }}
-                >
-                  <Card className="glass-effect oracle-shadow hover:shadow-lg transition-shadow h-full flex flex-col overflow-hidden group">
-                    <div className="w-full h-48 overflow-hidden">
-                      <img src={site.imageUrl} alt={site.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    </div>
-                    <CardHeader>
-                      <CardTitle className="text-oracle-brown flex items-center">
-                        <MapPin className="mr-2 w-5 h-5" />
-                        {site.name}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-grow flex flex-col">
-                      <div className="space-y-2 flex-grow">
-                        <p className="text-sm"><span className="font-medium text-ink-black/80">位置:</span> {site.location}</p>
-                        <p className="text-sm"><span className="font-medium text-ink-black/80">发现:</span> {site.discovered}</p>
-                        <p className="text-sm"><span className="font-medium text-ink-black/80">出土:</span> {site.artifacts}</p>
-                        <p className="text-sm text-ink-black/70 mt-2">{site.significance}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Evolution Tree Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-oracle-brown mb-4">文字演化树</h2>
-            <p className="text-lg text-ink-black/70">见证汉字从甲骨文到现代的演变历程</p>
-          </motion.div>
-
-          <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
-            {evolutionStages.map((stage, index) => (
+          {/* 汉字网格 */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {filteredCharacters.map((character, index) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                className="relative flex"
-              >
-                <Card className="glass-effect oracle-shadow hover:shadow-lg transition-shadow text-center group flex flex-col h-full w-full">
-                  <CardHeader className="p-0">
-                    <div className="w-full h-48 overflow-hidden rounded-t-lg">
-                      <img src={stage.imageUrl} alt={stage.stage} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    </div>
-                    <div className="p-6">
-                      <CardTitle className="text-oracle-brown">{stage.stage}</CardTitle>
-                      <p className="text-sm text-bronze-blue">{stage.period}</p>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-6 pt-0 flex-grow flex flex-col">
-                    <p className="text-sm text-ink-black/70 mb-4 text-left flex-grow">{stage.description}</p>
-                    <ul className="text-xs text-ink-black/60 space-y-2 text-left">
-                      {stage.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start">
-                          <ArrowRight className="w-3 h-3 mr-2 mt-1 text-cinnabar-red flex-shrink-0" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-                
-                {/* Arrow */}
-                {index < evolutionStages.length - 1 && (
-                  <div className="hidden lg:flex absolute top-1/2 -right-4 transform -translate-y-1/2 z-10 items-center justify-center">
-                    <ArrowRight className="w-8 h-8 text-bronze-blue/50" />
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 2D Artifacts Preview */}
-      <section className="py-20 px-4 bg-gradient-to-b from-oracle-brown/5 to-bone-white">
-        <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-oracle-brown mb-4">2D文物展示</h2>
-            <p className="text-lg text-ink-black/70">清晰浏览珍贵甲骨文物图片</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {artifacts2D.map((artifact, index) => (
-              <motion.div
-                key={artifact.id}
+                key={character.id}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
               >
-                <Card className="glass-effect oracle-shadow hover:shadow-lg transition-all group h-full flex flex-col">
-                  <div className="aspect-square rounded-t-lg overflow-hidden border-b-4 border-oracle-brown/50">
-                    <ArtifactViewer2D imageUrl={artifact.imageUrl} altText={artifact.altText} />
-                  </div>
-                  <CardContent className="p-4 flex-grow">
-                    <h3 className="font-semibold text-oracle-brown mb-2">{artifact.name}</h3>
-                    <p className="text-sm text-ink-black/70">{artifact.description}</p>
+                <Card 
+                  className="bg-oracle-light border-2 border-oracle-border/20 rounded-2xl shadow-lg hover:shadow-xl hover:border-oracle-gold/40 transition-all duration-300 hover:transform hover:-translate-y-2 cursor-pointer h-full"
+                  onClick={() => setSelectedCharacter(character)}
+                >
+                  <CardContent className="p-6">
+                    <div className="text-center mb-4">
+                      <div className="text-6xl font-bold text-oracle-primary mb-2 font-oracle">
+                        {character.character}
+                      </div>
+                      <h3 className="text-xl font-bold text-oracle-primary mb-1 font-oracle">
+                        {character.meaning}
+                      </h3>
+                      <Badge className="bg-oracle-gold/20 text-oracle-primary border-oracle-gold/40 font-oracle">
+                        {character.category}
+                      </Badge>
+                    </div>
+                    
+                    <p className="text-oracle-secondary text-sm leading-relaxed mb-4 line-clamp-2 font-oracle">
+                      {character.description}
+                    </p>
+                    
+                    <div className="flex items-center justify-between text-sm text-oracle-secondary">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1">
+                          <Eye className="w-4 h-4" />
+                          <span className="font-oracle">{character.views}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Heart className={`w-4 h-4 ${character.isLiked ? 'text-oracle-accent fill-current' : ''}`} />
+                          <span className="font-oracle">{character.likes}</span>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-oracle-muted hover:text-oracle-gold transition-colors duration-300" />
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
           </div>
+
+          {/* 空状态 */}
+          {filteredCharacters.length === 0 && (
+            <div className="text-center py-16">
+              <Search className="w-16 h-16 text-oracle-muted mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-oracle-primary mb-2 font-oracle">未找到相关汉字</h3>
+              <p className="text-oracle-secondary font-oracle">尝试调整搜索条件或选择其他分类</p>
+            </div>
+          )}
         </div>
       </section>
+
+      {/* 汉字详情弹窗 */}
+      <AnimatePresence>
+        {selectedCharacter && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedCharacter(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-oracle-light rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border-2 border-oracle-gold/30 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* 头部 */}
+              <div className="flex items-center justify-between p-6 border-b border-oracle-border/20 bg-oracle-surface">
+                <div className="flex items-center gap-4">
+                  <div className="text-4xl font-oracle text-oracle-primary">{selectedCharacter.character}</div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-oracle-primary font-oracle">{selectedCharacter.meaning}</h2>
+                    <Badge className="bg-oracle-gold/20 text-oracle-primary border-oracle-gold/40 font-oracle">{selectedCharacter.category}</Badge>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    onClick={startAnimation}
+                    disabled={isAnimating}
+                    className="bg-oracle-primary text-oracle-light hover:bg-oracle-secondary border-oracle-gold font-oracle"
+                  >
+                    <Play className="w-4 h-4 mr-2" />
+                    {isAnimating ? '播放中' : '演变动画'}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedCharacter(null)}
+                    className="p-2 text-oracle-muted hover:text-oracle-primary hover:bg-oracle-gold/10"
+                  >
+                    ×
+                  </Button>
+                </div>
+              </div>
+
+              <div className="p-6 max-h-[calc(90vh-120px)] overflow-y-auto scrollbar-thin">
+                {/* 演变展示 */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-bold text-ink-black mb-6">字形演变过程</h3>
+                  <div className="grid grid-cols-4 gap-6">
+                    {[
+                      { stage: 'oracle', name: '甲骨文', char: selectedCharacter.oracle },
+                      { stage: 'bronze', name: '金文', char: selectedCharacter.bronze },
+                      { stage: 'seal', name: '小篆', char: selectedCharacter.seal },
+                      { stage: 'regular', name: '楷书', char: selectedCharacter.regular }
+                    ].map((item, index) => (
+                      <div key={item.stage} className="text-center">
+                        <div className={`w-24 h-24 mx-auto mb-3 rounded-2xl flex items-center justify-center text-4xl oracle-text transition-all duration-500 ${
+                          isAnimating && currentStep === index 
+                            ? 'bg-oracle-brown text-white oracle-shadow-lg scale-110' 
+                            : 'bg-warm-white text-oracle-brown'
+                        }`}>
+                          {item.char}
+                        </div>
+                        <div className="font-medium text-ink-black">{item.name}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 详细信息 */}
+                <div className="grid lg:grid-cols-2 gap-8">
+                  <div>
+                    <h3 className="text-lg font-bold text-ink-black mb-4">字形解析</h3>
+                    <p className="text-stone-gray leading-relaxed mb-6">
+                      {selectedCharacter.description}
+                    </p>
+                    
+                    <h3 className="text-lg font-bold text-ink-black mb-4">造字故事</h3>
+                    <p className="text-stone-gray leading-relaxed">
+                      {selectedCharacter.story}
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-lg font-bold text-ink-black mb-4">统计信息</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-4 bg-warm-white rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <Eye className="w-5 h-5 text-oracle-brown" />
+                          <span>浏览次数</span>
+                        </div>
+                        <span className="font-bold text-oracle-brown">{selectedCharacter.views}</span>
+                      </div>
+                      <div className="flex items-center justify-between p-4 bg-warm-white rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <Heart className="w-5 h-5 text-oracle-brown" />
+                          <span>点赞数量</span>
+                        </div>
+                        <span className="font-bold text-oracle-brown">{selectedCharacter.likes}</span>
+                      </div>
+                      <div className="flex items-center justify-between p-4 bg-warm-white rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <Award className="w-5 h-5 text-oracle-brown" />
+                          <span>字符分类</span>
+                        </div>
+                        <Badge className="badge-oracle">
+                          {selectedCharacter.category}
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2 mt-6">
+                      <Button 
+                        size="sm" 
+                        className="btn-oracle flex-1"
+                      >
+                        <Heart className={`w-4 h-4 mr-2 ${selectedCharacter.isLiked ? 'fill-current' : ''}`} />
+                        {selectedCharacter.isLiked ? '已点赞' : '点赞'}
+                      </Button>
+                      <Button size="sm" className="btn-secondary">
+                        分享
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

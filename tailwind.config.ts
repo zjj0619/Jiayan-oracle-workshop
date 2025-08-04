@@ -12,10 +12,24 @@ const config: Config = {
   theme: {
   	extend: {
   		colors: {
-        'ink-black': '#1C1C1E', // 墨石黑
-        'bone-white': '#F5F2E9', // 宣纸白
-        'cinnabar-red': '#D93423', // 朱砂红
-        'elegant-gray': '#A9A9A9', // 雅灰
+        // 古朴甲骨文主题色彩
+        'oracle-dark': '#3E2723',      // 深咖啡色 - 墨色
+        'oracle-primary': '#5D4037',   // 深褐色 - 古木色
+        'oracle-secondary': '#8D6E63', // 灰褐色 - 古铜锈色
+        'oracle-accent': '#A1887F',    // 浅褐色 - 古陶色
+        'oracle-gold': '#B8860B',      // 暗金色 - 古铜器色
+        'oracle-light': '#EFEBE9',     // 古纸色 - 羊皮纸色
+        'oracle-bg': '#F5F5DC',        // 米色 - 古卷轴色
+        'oracle-surface': '#FFF8E1',   // 象牙白 - 古绢色
+        'oracle-text': '#2E1A0F',      // 深棕黑 - 古墨色
+        'oracle-border': '#795548',    // 赭石色 - 古印泥色
+        'oracle-muted': '#BCAAA4',     // 灰褐色 - 古石色
+        
+        // 保留原有颜色以兼容
+        'ink-black': '#2E1A0F',        // 更新为古墨色
+        'bone-white': '#FFF8E1',       // 更新为古绢色
+        'cinnabar-red': '#B8860B',     // 更新为古金色
+        'elegant-gray': '#BCAAA4',     // 更新为古石色
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -68,8 +82,9 @@ const config: Config = {
   			}
   		},
       fontFamily: {
-        heading: ['"Source Han Serif CN"', 'serif'], // 思源宋体
-        sans: ['"Source Han Sans CN"', 'sans-serif'], // 思源黑体
+        heading: ['"Noto Serif SC"', '"Source Han Serif CN"', 'serif'], // 古朴标题字体
+        sans: ['"Noto Sans SC"', '"Source Han Sans CN"', 'sans-serif'], // 现代正文字体
+        oracle: ['"Noto Serif SC"', '"Source Han Serif CN"', 'serif'], // 甲骨文专用字体
       },
   		borderRadius: {
   			lg: 'var(--radius)',
