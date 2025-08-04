@@ -6,7 +6,7 @@ import { Calendar, MapPin, Eye, TreePine, ArrowRight } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import ArtifactViewer3D from './ArtifactViewer3D'
+import ArtifactViewer2D from './ArtifactViewer2D'
 
 const OriginPage = () => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -58,7 +58,7 @@ const OriginPage = () => {
       name: "殷墟宫殿宗庙遗址",
       location: "河南安阳",
       discovered: "1928年起",
-      significance: "被誉为"中国现代考古学的摇篮"，是商代晚期都城的核心，出土了王陵、宫殿及大量甲骨文，实证了商代历史。",
+      significance: "被誉为\"中国现代考古学的摇篮\"，是商代晚期都城的核心，出土了王陵、宫殿及大量甲骨文，实证了商代历史。",
       artifacts: "约15万片甲骨",
       imageUrl: "/images/武丁卜辞甲骨片.jpg",
       coordinates: { x: 35, y: 45 }
@@ -76,7 +76,7 @@ const OriginPage = () => {
       name: "花园庄东地甲骨窖藏",
       location: "河南安阳",
       discovered: "1991年",
-      significance: "一次性出土了完整的"非王卜辞"窖藏，内容多为一位名为"子"的贵族的占卜记录，极大地丰富了对商代社会结构的认识。",
+      significance: "一次性出土了完整的\"非王卜辞\"窖藏，内容多为一位名为\"子\"的贵族的占卜记录，极大地丰富了对商代社会结构的认识。",
       artifacts: "1583片甲骨",
       imageUrl: "/images/花园庄东地甲骨.jpg",
       coordinates: { x: 45, y: 55 }
@@ -114,24 +114,27 @@ const OriginPage = () => {
     }
   ]
 
-  const artifacts3D = [
+  const artifacts2D = [
     {
       id: 1,
       name: "商王武丁卜骨",
       description: "记录商王武丁时期关于战争的占卜。",
-      modelUrl: "/models/bu-gu-1.glb" // 注意：这是占位符路径
+      imageUrl: "/images/武丁卜辞甲骨片.jpg",
+      altText: "商王武丁卜骨"
     },
     {
       id: 2,
       name: "祭祀卜辞龟甲",
       description: "详细记载了对先祖的祭祀仪式。",
-      modelUrl: "/models/gui-jia-1.glb" // 注意：这是占位符路径
+      imageUrl: "/images/祖庚祭祀卜辞.jpg",
+      altText: "祭祀卜辞龟甲"
     },
     {
       id: 3,
       name: "“王”字卜骨",
       description: "刻有清晰“王”字的牛胛骨。",
-      modelUrl: "/models/wang-zi-gu-1.glb" // 注意：这是占位符路径
+      imageUrl: "/images/花园庄东地甲骨.jpg",
+      altText: "“王”字卜骨"
     }
   ]
 
@@ -354,7 +357,7 @@ const OriginPage = () => {
         </div>
       </section>
 
-      {/* 3D Artifacts Preview */}
+      {/* 2D Artifacts Preview */}
       <section className="py-20 px-4 bg-gradient-to-b from-oracle-brown/5 to-bone-white">
         <div className="container mx-auto max-w-6xl">
           <motion.div
@@ -363,12 +366,12 @@ const OriginPage = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-oracle-brown mb-4">3D文物展示</h2>
-            <p className="text-lg text-ink-black/70">沉浸式体验珍贵甲骨文物</p>
+            <h2 className="text-4xl font-bold text-oracle-brown mb-4">2D文物展示</h2>
+            <p className="text-lg text-ink-black/70">清晰浏览珍贵甲骨文物图片</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {artifacts3D.map((artifact, index) => (
+            {artifacts2D.map((artifact, index) => (
               <motion.div
                 key={artifact.id}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -377,7 +380,7 @@ const OriginPage = () => {
               >
                 <Card className="glass-effect oracle-shadow hover:shadow-lg transition-all group h-full flex flex-col">
                   <div className="aspect-square rounded-t-lg overflow-hidden border-b-4 border-oracle-brown/50">
-                    <ArtifactViewer3D modelUrl={artifact.modelUrl} />
+                    <ArtifactViewer2D imageUrl={artifact.imageUrl} altText={artifact.altText} />
                   </div>
                   <CardContent className="p-4 flex-grow">
                     <h3 className="font-semibold text-oracle-brown mb-2">{artifact.name}</h3>

@@ -16,14 +16,14 @@ export default defineConfig({
   // GitHub Pages 部署配置
   base: process.env.NODE_ENV === 'production' ? '/jiayan-oracle-workshop/' : '/',
   build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
+    outDir: "dist",
+    assetsDir: "assets",
     sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu']
+          vendor: ["react", "react-dom"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu"]
         }
       }
     }

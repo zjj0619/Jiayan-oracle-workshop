@@ -1,8 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Han+Sans+CN:wght@400;700&family=Source+Han+Serif+CN:wght@700&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Source+Han+Sans+CN:wght@400;700&family=Source+Han+Serif+CN:wght@700&display=swap');
 
 :root {
   /* 数字考古主题色彩系统 */
