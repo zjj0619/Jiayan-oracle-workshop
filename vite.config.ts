@@ -13,8 +13,8 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: true
   },
-  // GitHub Pages 部署配置
-  base: '/jiayan-oracle-workshop/',
+  // EdgeOne 部署配置
+  base: './',
   build: {
     outDir: "dist",
     assetsDir: "assets",
